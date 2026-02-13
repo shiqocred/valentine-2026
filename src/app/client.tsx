@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/draggable-card";
 import { HeroParallax } from "@/components/ui/hero-parallax";
 import { cn } from "@/lib/utils";
+import confetti from "canvas-confetti";
 import ReactLenis from "lenis/react";
-import { Heart, Mail } from "lucide-react";
+import { Heart, Mail, MailOpen } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import ReactConfetti from "react-confetti";
 
 const foto_hero = [
   {
@@ -140,10 +142,9 @@ const items = [
   },
 ];
 
-const valentineDate = new Date(2026, 1, 14, 0, 0, 0).getTime();
-const now = new Date().getTime();
-
 export function Client() {
+  const [run, setRun] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
@@ -152,8 +153,78 @@ export function Client() {
     isDone: false,
   });
 
+  const handleSideCannon = () => {
+    const end = Date.now() + 3 * 1000; // 3 seconds
+    const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+    const frame = () => {
+      if (Date.now() > end) return;
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 0, y: 0.5 },
+        colors: colors,
+      });
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        startVelocity: 60,
+        origin: { x: 1, y: 0.5 },
+        colors: colors,
+      });
+      requestAnimationFrame(frame);
+    };
+    frame();
+  };
+
+  const handleFramework = () => {
+    const scalar = 2;
+    const unicorn = confetti.shapeFromText({ text: "❤️", scalar });
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 0,
+      shapes: [unicorn],
+    };
+    const randomInRange = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
+    const interval = window.setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+  };
+
+  const handleOpen = () => {
+    setIsOpen(true);
+    setRun(true);
+
+    // stop setelah 5 detik
+    setTimeout(() => {
+      setRun(false);
+    }, 5000);
+  };
+
   useEffect(() => {
     const calculateTimeLeft = () => {
+      const valentineDate = new Date(2026, 1, 13, 0, 0, 0).getTime();
       const now = Date.now(); // ✅ ambil waktu terbaru tiap detik
       const difference = valentineDate - now;
 
@@ -214,7 +285,7 @@ export function Client() {
     );
   }
 
-  if (!timeLeft.isDone)
+  if (!isOpen)
     return (
       <div className="min-h-screen bg-linear-to-br from-rose-200 via-rose-300 to-rose-200 flex flex-col items-center justify-center px-4 relative overflow-hidden">
         {/* Main content */}
@@ -230,57 +301,60 @@ export function Client() {
             Waktu menghitung mundur menuju hari cinta yang penuh makna
           </p>
 
-          {/* Countdown */}
-          {!timeLeft.isDone ? (
-            <div className="mb-12">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-xl mx-auto mb-8">
-                {/* Hours */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                    {String(timeLeft.hours).padStart(2, "0")}
-                  </div>
-                  <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
-                    Jam
-                  </div>
+          <div className="mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 max-w-xl mx-auto mb-8">
+              {/* Hours */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                  {String(timeLeft.hours).padStart(2, "0")}
                 </div>
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                    {String(timeLeft.minutes).padStart(2, "0")}
-                  </div>
-                  <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
-                    Menit
-                  </div>
-                </div>
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                    {String(timeLeft.seconds).padStart(2, "0")}
-                  </div>
-                  <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
-                    Detik
-                  </div>
+                <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
+                  Jam
                 </div>
               </div>
-              <div className="text-sm text-foreground/60 font-medium tracking-wider">
-                14 FEBRUARI 2026
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                  {String(timeLeft.minutes).padStart(2, "0")}
+                </div>
+                <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
+                  Menit
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
+                  {String(timeLeft.seconds).padStart(2, "0")}
+                </div>
+                <div className="text-sm font-semibold text-foreground/70 uppercase tracking-wider">
+                  Detik
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="mb-12 p-8 bg-white rounded-2xl shadow-xl">
-              <p className="text-4xl font-bold text-primary mb-4">
-                ✨ Selamat Hari Valentine! ✨
-              </p>
-              <p className="text-lg text-foreground/70">
-                Hari cinta telah tiba! Bagikan kasih sayang dengan orang-orang
-                terkasih.
-              </p>
+            <div className="text-sm text-foreground/60 font-medium tracking-wider">
+              14 FEBRUARI 2026
             </div>
-          )}
+            {timeLeft.isDone && (
+              <Button
+                onClick={handleOpen}
+                className="bg-rose-100 text-red-500 hover:bg-rose-200 mt-6"
+              >
+                <MailOpen className="text-red-500" />
+                Buka Ucapan
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );
 
   return (
     <ReactLenis root>
+      {run && (
+        <ReactConfetti
+          recycle={true} // supaya terus spawn selama run=true
+          numberOfPieces={300} // jumlah confetti aktif
+          gravity={0.3} // efek jatuh
+        />
+      )}
       <HeroParallax products={foto_hero} />
       <div className="relative w-screen">
         {sticky_timeline.map((item) => (
@@ -295,8 +369,12 @@ export function Client() {
               )}
             >
               <div className="flex justify-center flex-col gap-2 m-5 xl:m-10">
-                <p className="text-2xl font-bold">{item.title}</p>
-                <p className="leading-relaxed text-base">{item.description}</p>
+                <p className="text-lg md:text-xl xl:text-2xl font-bold">
+                  {item.title}
+                </p>
+                <p className="leading-relaxed text-xs md:text-sm xl:text-base">
+                  {item.description}
+                </p>
               </div>
               <div className="relative flex items-center rounded-lg overflow-hidden my-10 mx-10 xl:mx-20 col-span-2 shadow-md">
                 <Image
@@ -313,13 +391,16 @@ export function Client() {
       </div>
       <div className="w-screen h-screen p-20">
         <DraggableCardContainer className="relative flex size-full items-center justify-center overflow-clip rounded-xl bg-pink-300 shadow-md">
-          <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-black text-neutral-400 md:text-4xl dark:text-neutral-800 -mt-20">
+          <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-black text-neutral-400 md:text-4xl dark:text-neutral-800 -mt-10 xl:-mt-20">
             <ColourfulText text="I Love You" />
           </p>
           {items.map((item) => (
             <DraggableCardBody
               key={item.image}
-              className={cn("relative size-80", item.className)}
+              className={cn(
+                "relative min-h-60 xl:min-h-96 size-50 xl:size-80",
+                item.className,
+              )}
             >
               <Image
                 src={item.image}
@@ -331,13 +412,16 @@ export function Client() {
           ))}
         </DraggableCardContainer>
       </div>
-      <div className="h-[25vh] bg-linear-to-br from-rose-300 to-rose-400 flex items-center justify-center flex-col gap-10">
-        <p className="text-3xl text-rose-900 font-bold">
+      <div className="h-[25vh] bg-linear-to-br from-rose-300 to-rose-400 flex items-center justify-center flex-col gap-4 xl:gap-10">
+        <p className="text-xl xl:text-3xl text-rose-900 font-bold">
           Surat dari penggemarmu
         </p>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="rounded-full bg-rose-100 text-red-500 hover:bg-rose-200">
+            <Button
+              onClick={handleSideCannon}
+              className="rounded-full bg-rose-100 text-red-500 hover:bg-rose-200"
+            >
               <Mail />
               Buka surat ini
             </Button>
@@ -346,25 +430,37 @@ export function Client() {
             <DialogHeader>
               <DialogTitle>Surat Untukmu</DialogTitle>
             </DialogHeader>
-            <p className="leading-relaxed mt-4">
+            <p className="leading-relaxed text-xs xl:text-sm mt-4">
               Aku nggak pernah nyangka perjalanan yang awalnya biasa saja bisa
               jadi sepenting ini buatku. Dari modus KKN sampai sekarang. rasanya
-              semuanya tumbuh pelan-pelan tapi pasti. Terima kasih sudah tetap
-              ada, bahkan di saat sangat menyebalkan. Terima kasih sudah sabar,
-              sudah mau dengerin, dan sudah bertahan bareng-bareng. Kita mungkin
-              nggak selalu sempurna. Kadang beda pendapat, kadang sama-sama
-              keras kepala. Tapi justru itu yang bikin hubungan ini terasa nyata
-              dan hidup. Aku cuma mau kamu tahu, aku menghargai kamu lebih dari
-              yang sering aku ucapkan. Dan selama kamu masih mau jalan bareng,
-              aku juga akan tetap di sini.
+              semuanya tumbuh pelan-pelan tapi pasti. Kadang beda pendapat,
+              kadang sama-sama keras kepala.
             </p>
-            <p className="mt-2">Selamat Hari Valentine.</p>
-            <p>Terima kasih sudah jadi bagian penting dalam hidupku.</p>
+            <p className="leading-relaxed text-xs xl:text-sm mt-2">
+              Terima kasih sudah tetap ada, bahkan di saat sangat menyebalkan.
+              Terima kasih sudah sabar, sudah mau dengerin, dan sudah bertahan
+              bareng-bareng. Kita mungkin nggak selalu sempurna.
+            </p>
+            <p className="leading-relaxed text-xs xl:text-sm mt-2">
+              Tapi justru itu yang bikin hubungan ini terasa nyata dan hidup.
+              Aku cuma mau kamu tahu, aku menghargai kamu lebih dari yang sering
+              aku ucapkan. Dan selama kamu masih mau jalan bareng, aku juga akan
+              tetap di sini.
+            </p>
+            <p className="leading-relaxed text-xs xl:text-sm mt-2">
+              Selamat Hari Valentine.
+            </p>
+            <p className="leading-relaxed text-xs xl:text-sm mt-2">
+              Terima kasih sudah jadi bagian penting dalam hidupku.
+            </p>
             <DialogFooter className="mt-4">
               <DialogClose asChild>
-                <Button className="bg-rose-100 text-red-500 hover:bg-rose-200">
+                <Button
+                  onClick={handleFramework}
+                  className="bg-rose-100 text-red-500 hover:bg-rose-200"
+                >
                   <Heart className="fill-red-500" />
-                  Love You too
+                  Love You Moree
                 </Button>
               </DialogClose>
             </DialogFooter>
@@ -372,13 +468,15 @@ export function Client() {
         </Dialog>
       </div>
       <div className="h-[50vh] flex items-center justify-center flex-col">
-        <p className="text-3xl font-bold">
+        <p className="text-xl xl:text-3xl font-bold">
           Mungkin dunia merayakan cinta hari ini.
         </p>
-        <p className="text-3xl font-bold text-rose-400 mt-2">
+        <p className="text-xl xl:text-3xl font-bold text-rose-400 mt-2">
           Tapi bagiku, mencintaimu adalah perayaan yang tak pernah usai.
         </p>
-        <p className="text-xl mt-10">- Happy Valentine&apos;s Day -</p>
+        <p className="text-base xl:text-xl mt-10">
+          - Happy Valentine&apos;s Day -
+        </p>
       </div>
     </ReactLenis>
   );
