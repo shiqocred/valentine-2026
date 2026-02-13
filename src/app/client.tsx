@@ -70,7 +70,7 @@ const foto_hero = [
     thumbnail: "/img_first_jalan.jpeg",
   },
   {
-    title: "Ndandong",
+    title: "Ngandong",
     thumbnail: "/img_ngandong.jpeg",
   },
   {
