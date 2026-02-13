@@ -43,7 +43,7 @@ const foto_hero = [
   },
   {
     title: "First PS",
-    thumbnail: "/ps.jpeg",
+    thumbnail: "/img_first_ps.jpeg",
   },
   {
     title: "Zoo Date",
