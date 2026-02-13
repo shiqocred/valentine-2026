@@ -98,7 +98,7 @@ const sticky_timeline = [
   {
     title: "Jadian - Resmi Menjadi Kita",
     description:
-      "Dimulai dari menyakinkanmu agar aku bisa mengantarkanmu pulang KKN sampai rumah, dalam perjalanan giliran aku menyakinkan diriku untuk mengungkapkan perasaanku padamu pada sampai aku mengucapkannya dan kamu menjawab butuh waktu untuk menjawab perasaanku, dan selama penantian sampai kamu menjawab 'IYA' di tanggal 28 November 2024 di waduk sermo",
+      "Dimulai dari menyakinkanmu agar aku bisa mengantarkanmu pulang KKN sampai rumah, dalam perjalanan giliran aku menyakinkan diriku untuk mengungkapkan perasaanku padamu pada sampai aku mengucapkannya dan kamu menjawab butuh waktu untuk menjawab perasaanku, dan selama penantian sampai kamu menjawab 'IYA' di tanggal 28 September 2024 di waduk sermo",
     content: "/img_confess_day.jpeg",
     color: "bg-linear-to-br from-pink-300 to-pink-500",
   },
