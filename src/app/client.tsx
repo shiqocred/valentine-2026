@@ -140,6 +140,9 @@ const items = [
   },
 ];
 
+const valentineDate = new Date(2026, 1, 14, 0, 0, 0).getTime();
+const now = new Date().getTime();
+
 export function Client() {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [timeLeft, setTimeLeft] = useState({
@@ -148,9 +151,6 @@ export function Client() {
     seconds: 0,
     isDone: false,
   });
-
-  const valentineDate = new Date(2026, 1, 14, 0, 0, 0).getTime();
-  const now = new Date().getTime();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -176,7 +176,7 @@ export function Client() {
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, [now, valentineDate]);
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1024px)");
