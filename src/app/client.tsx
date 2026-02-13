@@ -154,6 +154,7 @@ export function Client() {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
+      const now = Date.now(); // ✅ ambil waktu terbaru tiap detik
       const difference = valentineDate - now;
 
       if (difference > 0) {
@@ -175,6 +176,7 @@ export function Client() {
 
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -212,7 +214,7 @@ export function Client() {
     );
   }
 
-  if (now < valentineDate)
+  if (!timeLeft.isDone)
     return (
       <div className="min-h-screen bg-linear-to-br from-rose-200 via-rose-300 to-rose-200 flex flex-col items-center justify-center px-4 relative overflow-hidden">
         {/* Main content */}
