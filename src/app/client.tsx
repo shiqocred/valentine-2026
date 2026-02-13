@@ -224,7 +224,7 @@ export function Client() {
 
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const valentineDate = new Date(2026, 1, 13, 0, 0, 0).getTime();
+      const valentineDate = new Date(2026, 1, 14, 0, 0, 0).getTime();
       const now = Date.now(); // ✅ ambil waktu terbaru tiap detik
       const difference = valentineDate - now;
 
